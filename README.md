@@ -1,75 +1,75 @@
 # OnePush
 
-Small Arduino library for doing many things with a single button. You can use any button to: turn things on or off with each press, or do different things each press, 4 examples included.
+用单个按键实现多种功能的很小的一个 Arduino 库。你可以使用任意按键实现每次按压开或关或做不同的事情，包含四个例子。
 
-**Tested on an Arduino Due only.**
+**仅在 Arduino Due 上面测试过**
 
-## Instructions
+## 介绍
 
-**This library requires the Debounce library. Just include it, OnePush does the rest.**
+**这个库需要 Debounce 库，仅仅引入包含即可，其余的由 OnePush 库来实现**
 
-Include the libraries in your sketch:
+在你的程序中引入库头文件：
 
     #include <Debounce.h>
     #include <OnePush.h>
 
-### Constructors
+### 构造器
 
-There are two ways to create your OnePush object.
+有两种方法创建你的 OnePush 对象。
 
-### Single Level Button
+### 单级按钮
 
-This will create an OnePush object with a single level, push the button once to turn somethign ON and push it again to turn it OFF:
+下面语句将创建单级按钮对象，按下按键打开再按关闭。
 
-    OnePush myButton = OnePush(10); // 10 is the button pin, could be a variable.
+    OnePush myButton = OnePush(10); // 10 代表引脚，可以是变量
 
-### Multi-Level Button
+### 多级按钮
 
-This will create an OnePush object with multiple levels:
+下面语句创建多个等级的按钮对象：
 
     OnePush myButton = OnePush(10, 3); // Button pin 10, 3 levels, plus level 0.
 
-You can have a lot of levels, anything between 1 and 255. Each time you press the button it'll go to the next level. You can do different things for each level. It's something like those older cellphones where you would press the same key several times to cycle through the letters when writing a text message: key 2 cycles the letters *A*, *B* and *C*.
+你可以有很多个等级，范围1-255，每次你按压按钮就会切入下一个等级，你可以设计不同的事情对应每一个等级，有点像老电话机，发短信时按压同一个键几次来切换不同的字母。
 
-### Functions
+### 函数
 
-OnePush has 6 functions.
+OnePush 有6个函数。
 
 #### update()
 
-Reads the debounced button and updates some variables. You probably won't need to use it since most other OnePush functions will call it automatically.
+读取消抖后的按钮值并更新一些变量。你一般情况下不需调用它因为其他的函数自动对他进行调用。
 
     myButton.update();
 
 #### status()
 
-Returns the current status, false if on Level 0, true on any other level. Good to know if you're on some active level or the default Level 0.
+返回当前的状态，等级0返回False，其他的等级返回True，用于确认它是否处于某个等级。
 
     myButton.status(); // Returns false for Level 0, true otherwise.
 
 #### state()
 
-The same as status(), but returns HIGH/LOW instead of true/false;
+类似于 status() ，但返回的是 HIGH/LOW 而不是 true/false。
 
     myButton.state(); // Returns LOW for Level 0, HIGH otherwise.
 
 #### level()
 
-Returns the current level. Good for implementing different things for each level.
+返回当前等级。
 
     (myButton.level() == 2); // Returns true if 2 is the current level, false otherwise.
 
 #### set(level)
 
-Defines the current level, you can change to any valid level, invalid levels will be ignored.
+设置当前的等级，不合法的等级将会被忽略。
 
-    myButton.set(10); // is ignored if there are not so many levels.
+    myButton.set(10); // 如果没有那么多等级将会被忽略
     myButton.set(1); // Changes to Level 1.
-    myButton.set(10) == 10; // Returns false since the change wasn't accepted.
-    myButton.set(1) == 1; // Changes to Level 1 and returns true.
+    myButton.set(10) == 10; // 由于等级不被接受返回False
+    myButton.set(1) == 1; // 设置为等级1并返回True
 
 #### next()
 
-Changes to the next level, changes to Level 0 if the current Level is the last.
+切换到下一个等级，如果当前等级是最后一个则切换回等级0。
 
     myButton.next(); // Moves from current Level to the next one.
